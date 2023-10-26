@@ -1,14 +1,29 @@
 [
     {
-        "username": "stephen",
-        "password": "1234",
-        "api_key": "6ih3vz0nx02b8hs1k71qud",
-        "role": "admin"
+        "name": "steve",
+        "email": "me@gmail.com",
+        "contact": "5995959559",
+        "gender": "male",
+        "passsword": "nnkn",
+        "api_key": "spmp6tqoe2ab3g7itaycsk",
+        "role": "user"
     },
     {
-        "username": "adebayo",
-        "password": "1234",
-        "api_key": "g1kt0wdjzhekjfp4wbarih",
+        "username": "steve",
+        "email": "me@gmail.com",
+        "contact": "5995959559",
+        "gender": "male",
+        "passsword": "nnkn",
+        "api_key": "irtw3il3qypg1w86bebqan",
+        "role": "user"
+    },
+    {
+        "username": "steve",
+        "email": "me@gmail.com",
+        "contact": "5995959559",
+        "gender": "male",
+        "passsword": "nnkn",
+        "api_key": "8lwwky7uspysssy16yfu",
         "role": "user"
     }
 ]

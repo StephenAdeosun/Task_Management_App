@@ -3,6 +3,11 @@ const middleware = require('./user_middleware.js');
 const controller = require('./users_controllers.js');
 
 const router = express.Router();
+// signup
+router.post('/signup', middleware.ValidateUserCreation, controller.CreateUser);
 
-router.post('/', middleware.validateUser, controller.createUser);
+// login
+router.post('/login', middleware.ValidateUserLogin, controller.LoginUser);
 module.exports = router;
+
+

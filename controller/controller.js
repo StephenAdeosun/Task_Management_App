@@ -1,4 +1,4 @@
-const db = require('../db/inventory.js')
+const db = require('../dbs/inventory.js')
 const fs = require('fs')
 const path = require('path')
 

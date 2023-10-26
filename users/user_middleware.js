@@ -1,21 +1,59 @@
 const fs = require('fs')
-const validateUser = (req, res, next) => {
-    const userData = fs.readFileSync('./users/users.json')
-    const userDataJson = JSON.parse(userData)
-    const exists = userDataJson.find(user => user.username === req.body.username)
-    if (!req.body.username || !req.body.username.trim()) {
-        res.status(400).send('Username is required')
-    } else if (!req.body.password || !req.body.password.trim()) {
-        res.status(400).send('Password is required')
-    } else if (exists) {
-        res.status(400).send('Username already exists')
-    }
-    
-    else {
+const joi = require('joi')
+
+
+const ValidateUserCreation = async (req, res, next) => {
+    try {
+        const schema = joi.object({
+            name: joi.string().required().min(3).messages({
+                'string.min': 'Name must be at least 3 characters long',
+                'any.required': 'Name is required',
+            }),
+            password: joi.string().min(6).required().messages({
+                'string.min': 'Password must be at least 6 characters long',
+                'any.required': 'Password is required',
+            }),
+            email: joi.string().email().required().messages({
+                'string.email': 'Invalid email format',
+                'any.required': 'Email is required',
+            }),
+            contact: joi.string().required(),
+            phone_number: joi.string().required(),
+            gender: joi.string().valid('male', 'female'),
+        })
+
+        await schema.validateAsync(req.body, { abortEarly: true })
+
         next()
+    } catch (error) {
+        return res.status(422).json({
+            message: error.message,
+            success: false
+        })
     }
 }
 
+const ValidateUserLogin = async (req, res, next) => {
+    try {
+        const schema = joi.object({
+            password: joi.string().required(),
+            email: joi.string().email().required(),
+        })
+
+        await schema.validateAsync(req.body, { abortEarly: true })
+        next()
+    } catch (error) {
+        return res.status(422).json({
+            message: error.message,
+            success: false
+        })
+    }
+}
+
+
+
+
 module.exports = {
-    validateUser
+    ValidateUserCreation,
+    ValidateUserLogin
 }

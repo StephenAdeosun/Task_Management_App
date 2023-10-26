@@ -1,4 +1,6 @@
 const fs =  require('fs')
+const jwt = require('jsonwebtoken')
+const UserModel = require('../model/UserModel')
 
 const apiKeyAuth = (req, res, next) => {
     const userData = fs.readFileSync('./users/users.json')
@@ -18,7 +20,25 @@ const apiKeyAuth = (req, res, next) => {
     }
 }
 
+const BearerTokenAuth = async (req, res, next) => {
+   try{
+    const authHeader = req.headers.authorization;
+    if(!authHeader){
+        return res.status(401).json({ message: 'You are not authenticated!' });
+    }
+    const token = authHeader.split(' ')[1];
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await UserModel.findOne({ _id: decodedToken._id })
 
+    if(!decodedToken){
+        return res.status(401).json({ message: 'You are not authenticated!' });
+    }
+    req.user = user;
+    next();
+} catch(error){
+        return res.status(401).json({ message: 'You are not authenticated!' });
+    }
+}
 
 
 const checkAdmin =(req, res, next) => {   
@@ -48,4 +68,4 @@ const checkUser = (req,res,next)=>{
     }
 }
 
-module.exports = {checkAdmin, apiKeyAuth , checkUser}
+module.exports = {checkAdmin, apiKeyAuth ,BearerTokenAuth, checkUser}
