@@ -4,12 +4,17 @@ const userServices = require("../users/users.services.js");
 const cookieParser = require("cookie-parser");
 const TaskModel = require("../model/TaskModel.js");
 const taskService = require("../task/task_controller");
+const taskRouter = require("../task/task_router");
 // const auth = require('../auth/auth_login')
 const jwt = require("jsonwebtoken");
+const app = require("../api.js");
 require("dotenv").config();
 const router = express.Router();
 
 router.use(cookieParser());
+router.use('/tasks', taskRouter)
+
+
 
 router.get("/", (req, res) => {
   res.render("home");
@@ -129,50 +134,6 @@ router.post('/task/create', async (req, res) => {
 
 
 
-// Add an edit route for a specific task
-router.get('/views/task/edit/<%= task._id %>', async (req, res) => {
-  try {
-    const taskId = req.params.taskId;
 
-    // Fetch the task from the database by its _id (taskId)
-    const task = await TaskModel.findById(taskId);
-
-    if (!task) {
-      // Handle the case where the task with the given _id doesn't exist
-      return res.status(404).send('Task not found');
-    }
-
-    // Render the edit form with the task data
-    res.render('taskedit', { task });
-  } catch (error) {
-    // Handle any errors that occur during the retrieval of the task
-    console.error('Error fetching task for editing:', error);
-    res.status(500).send('Internal Server Error');
-  }
-});
-
-router.post('/views/task/edit/<%= task._id %>', async (req, res) => {
-  try {
-    const taskId = req.params.taskId;
-    const updatedTaskData = {
-      title: req.body.title,
-      description: req.body.description,
-      state: req.body.state,
-    };
-
-    // Update the task with the new data
-    await TaskModel.findByIdAndUpdate(taskId, updatedTaskData);
-
-    // Redirect to the task list page after editing
-    res.redirect('/views/task');
-  } catch (error) {
-    // Handle errors that may occur during the update process
-    console.error('Error updating task:', error);
-    res.status(500).send('Internal Server Error');
-  }
-});
-
-
-// /
 
 module.exports = router;

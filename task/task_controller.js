@@ -40,7 +40,17 @@ const getTasks = async (user_id) => {
   };
 }
 
+const deleteTask = (req, res) => {
+  const id = req.params.id
+  TaskModel.findByIdAndRemove(id)
+      .then(book => {
+          res.redirect("/task")
+      }).catch(err => {
+          console.log(err)
+          res.status(500).send(err)
+      })
+}
 
 
 
-  module.exports = {   createTask, getTasks }
+  module.exports = {   createTask, getTasks , deleteTask}

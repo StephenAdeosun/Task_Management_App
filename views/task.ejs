@@ -32,14 +32,28 @@ tr:nth-child(even) {
     <th>Title</th>
     <th>Description</th>
     <th>status</th>
-    <th>edit</th>
+  
   </tr>
   <% tasks.forEach(function(task){ %>
     <tr>
         <td><%= task.title %></td>
         <td><%= task.description %></td>
-        <td><%= task.state %></td>
-        <td><a href="/views/task/edit/<%= task._id %>">Edit</a></td>
+ <td><%= task.state %></td>
+        <td>
+         
+          <div class="edit-delete-button-container">
+            
+              <a href="/edit/<%= task._id %>">
+                 Edit
+              </a>
+          </div>
+      </div>
+        </td> 
+        <td>
+        <a href="/delete/<%= task._id %>">
+                 Delete
+              </a>
+            </td>
       </tr>
   <% }); %>
 </table>
