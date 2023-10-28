@@ -30,12 +30,13 @@
   <h2 class="text-2xl font-semibold">
     Welcome to your
     Dashboard</h2>
-  <a href="/views/task/create" class="bg-blue-500 text-white rounded p-2 mt-4 inline-block">Create Task</a>
+  <a href="/views/task/create" class="bg-blue-500 text-white rounded mr-4 p-2 mt-4 inline-block">Create Task</a>
 
   <!-- Filter buttons with Tailwind CSS -->
   <div class="mt-4">
-    <button class="bg-blue-500 text-white rounded p-2 mr-2" id="pendingFilter">Pending Tasks</button>
-    <button class="bg-green-500 text-white rounded p-2" id="completedFilter">Completed Tasks</button>
+    <button class="bg-yellow-500 text-white rounded p-2" id="completedFilter"><a href="/views/task/">All Tasks</a></button>
+    <button class="bg-blue-500 text-white rounded p-2 mx-2" id="pendingFilter"><a href="/views/task/pending">Pending Tasks</a></button>
+    <button class="bg-green-500 text-white rounded p-2" id="completedFilter"><a href="/views/task/completed">Completed Tasks</a></button>
   </div>
 
   <!-- Table with reduced width and centered -->

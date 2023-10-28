@@ -116,7 +116,32 @@ router.get('/task', async (req, res) => {
 
 
 
+router.get('/task/completed', async (req, res) => {
+  const user_id = res.locals.user.id;
 
+  const response = await taskService.getCompletedTasks(user_id);
+
+  res.render('task', { 
+    user: res.locals.user, 
+    tasks: response.data.tasks
+  });
+
+  console.log({ user: req.user });
+  console.log(response);
+})
+router.get('/task/pending', async (req, res) => {
+  const user_id = res.locals.user.id;
+
+  const response = await taskService.getPendingTasks(user_id);
+
+  res.render('task', { 
+    user: res.locals.user, 
+    tasks: response.data.tasks
+  });
+
+  console.log({ user: req.user });
+  console.log(response);
+})
  
 router.get('/task/create', (req, res) => {
   res.render('taskcreate')

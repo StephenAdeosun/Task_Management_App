@@ -51,6 +51,34 @@ const deleteTask = (req, res) => {
       })
 }
 
+// get tasks that state=completed
+const getCompletedTasks = async (user_id) => {
+  const tasks = await TaskModel.find({ user_id, state: 'completed' });
+
+  return {
+    code: 200,
+    success: true,
+    message: 'Tasks fetched successfully',
+    data: {
+      tasks
+    }
+  };
+}
+// get tasks that state=pending
+const getPendingTasks = async (user_id) => {
+  const tasks = await TaskModel.find({ user_id, state: 'pending' });
+
+  return {
+    code: 200,
+    success: true,
+    message: 'Tasks fetched successfully',
+    data: {
+      tasks
+    }
+  };
+}
 
 
-  module.exports = {   createTask, getTasks , deleteTask}
+  module.exports = {   createTask, getTasks , deleteTask,getCompletedTasks,
+  getPendingTasks
+  }
