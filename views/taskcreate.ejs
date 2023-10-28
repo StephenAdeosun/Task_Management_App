@@ -1,53 +1,44 @@
-<!-- task-form.ejs -->
-<!-- <form action="/create-task" method="POST">
-    <input type="text" name="title" placeholder="Title">
-    <input type="text" name="description" placeholder="Description">
-    <select name="state">
-      <option value="todo">To Do</option>
-      <option value="inprogress">In Progress</option>
-      <option value="done">Done</option>
-    </select>
-    <input type="text" name="user_id" placeholder="User ID">
-    <button type="submit">Create Task</button>
-  </form> -->
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
-<style>
-table {
-  font-family: arial, sans-serif;
-  border-collapse: collapse;
-  width: 100%;
-}
-
-td, th {
-  border: 1px solid #dddddd;
-  text-align: left;
-  padding: 8px;
-}
-
-tr:nth-child(even) {
-  background-color: #dddddd;
-}
-</style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.15/dist/tailwind.min.css">
 </head>
-<body>
+<body class="bg-gray-100 ">
+  <nav class="bg-blue-500 p-4">
+    <div class="container mx-auto flex justify-between items-center">
+        <!-- Logo -->
+        <div class="text-white text-2xl font-semibold">Logo</div>
+        
+        <!-- Navigation Links -->
+        <div class="space-x-4">
+            <a href="/views/" class="text-white hover:underline">Home</a>
+        </div>
+        
+        <!-- Login and Sign Up Buttons -->
+        <div>
+            <a href="/views/login" class="text-white mr-4 hover:underline">Login</a>
+            <a href="/views/signup" class="bg-white text-blue-500 px-4 py-2 rounded-full hover:bg-blue-100">Sign Up</a>
+        </div>
+    </div>
+</nav>
 
+    <h2 class="text-2xl font-semibold text-center my-4">Create Task</h2>
 
-<h2>Task</h2>
-<a href="/views/task/create">Create Task</a>
+    <form action="/views/task/create" method="post" class="container mx-auto p-4 mt-8 bg-white rounded-md shadow-md max-w-md">
+        <label for="title" class="text-gray-700 text-sm font-medium">Title:</label>
+        <input type="text" id="title" name="title" class="form-input w-full px-3 py-2 rounded-md shadow-sm border border-gray-300 mb-4" placeholder="Title" value="">
 
-<form action="/views/task/create" method="post">
-    <label for="title">title:</label><br>
-    <input type="text" id="title" name="title" value=""><br>
-    <label for="description">description:</label><br>
-    <input type="text" id="description" name="description" value=""><br>
-    <select name="state" id="state" >
-      <option value="pending">Pending</option>
-      <option value="completed">Completed</option>
-    </select>
-    <input type="submit" value="Submit">
-  </form> 
+        <label for="description" class="text-gray-700 text-sm font-medium">Description:</label>
+        <input type="text" id="description" name ="description" class="form-input w-full px-3 py-2 rounded-md shadow-sm border border-gray-300 mb-4" placeholder="Description" value="">
 
+        <label for="state" class="text-gray-700 text-sm font-medium">State:</label>
+        <select name="state" id="state" class="form-select w-full px-3 py-2 rounded-md shadow-sm border border-gray-300 mb-4">
+            <option value="pending">Pending</option>
+            <option value="completed">Completed</option>
+        </select>
+
+        <button type="submit" class="bg-blue-500 text-white rounded-md py-2 px-4 hover:bg-blue-600">Create Task</button>
+        <a href="/views/task" class="underline">Back to dashboard</a>
+    </form>
 </body>
 </html>

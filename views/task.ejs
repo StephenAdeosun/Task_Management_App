@@ -1,62 +1,73 @@
-<!-- task.ejs -->
 <!DOCTYPE html>
 <html>
 <head>
-<style>
-table {
-  font-family: arial, sans-serif;
-  border-collapse: collapse;
-  width: 100%;
-}
+  <!-- Include Tailwind CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
-td, th {
-  border: 1px solid #dddddd;
-  text-align: left;
-  padding: 8px;
-}
-
-tr:nth-child(even) {
-  background-color: #dddddd;
-}
-</style>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.15/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
+<body class="bg-gray-100 ">
+  <nav class="bg-blue-500 p-4">
+    <div class="container mx-auto flex justify-between items-center">
+        <!-- Logo -->
+        <div class="text-white text-2xl font-semibold">Logo</div>
+        
+        <!-- Navigation Links -->
+        <div class="space-x-4">
+            <a href="/views/" class="text-white hover:underline">Home</a>
+        </div>
+        
+        <!-- Login and Sign Up Buttons -->
+        <div>
+            <a href="/views/logout" class="text-white mr-4 hover:underline">Logout</a>
+            <!-- <a href="/views/signup" class="bg-white text-blue-500 px-4 py-2 rounded-full hover:bg-blue-100">Sign Up</a> -->
+        </div>
+    </div>
+</nav>
+<div class="bg-gray-100 flex flex-col items-center justify-center ">
 
-  
+<div class="container mx-auto p-4 text-center">
+  <h2 class="text-2xl font-semibold">
+    Welcome to your
+    Dashboard</h2>
+  <a href="/views/task/create" class="bg-blue-500 text-white rounded p-2 mt-4 inline-block">Create Task</a>
 
-<h2>Task</h2>
-<a href="/views/task/create">Create Task</a>
+  <!-- Filter buttons with Tailwind CSS -->
+  <div class="mt-4">
+    <button class="bg-blue-500 text-white rounded p-2 mr-2" id="pendingFilter">Pending Tasks</button>
+    <button class="bg-green-500 text-white rounded p-2" id="completedFilter">Completed Tasks</button>
+  </div>
 
-<table>
-  <tr>
-    <th>Title</th>
-    <th>Description</th>
-    <th>status</th>
-  
-  </tr>
-  <% tasks.forEach(function(task){ %>
-    <tr>
-        <td><%= task.title %></td>
-        <td><%= task.description %></td>
- <td><%= task.state %></td>
-        <td>
-         
-          <div class="edit-delete-button-container">
-            
-              <a href="/edit/<%= task._id %>">
-                 Edit
-              </a>
-          </div>
-      </div>
-        </td> 
-        <td>
-        <a href="/delete/<%= task._id %>">
-                 Delete
-              </a>
-            </td>
+  <!-- Table with reduced width and centered -->
+  <table class="w-1/2 mx-auto mt-4 bg-white shadow-md rounded-lg">
+    <thead>
+      <tr>
+        <th class="px-4 py-2">Title</th>
+        <th class="px-4 py-2">Description</th>
+        <th class="px-4 py-2">Status</th>
+        <th class="px-4 py-2">Action</th>
       </tr>
-  <% }); %>
-</table>
+    </thead>
+    <tbody>
+      <% tasks.forEach(function(task){ %>
+        <tr>
+          <td class="px-4 py-2"><%= task.title %></td>
+          <td class="px-4 py-2"><%= task.description %></td>
+          <td class="px-4 py-2"><%= task.state %></td>
+          <td class="px-4 py-2">
+            <a href="/edit/<%= task._id %>" class="text-blue-500 hover:text-blue-700 mr-2">
+              <i class="fas fa-edit"></i>
+            </a>
+            <a href="/delete/<%= task._id %>" class="text-red-500 hover:text-red-700">
+              <i class="fas fa-trash-alt"></i>
+            </a>
+          </td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</div>
+</div>
 
 </body>
 </html>

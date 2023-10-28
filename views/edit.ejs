@@ -1,42 +1,49 @@
-<div class="edit-task-container">
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.15/dist/tailwind.min.css">
+</head>
+<body class="bg-gray-100 h-screen flex items-center justify-center">
+    <div class="login-container bg-white rounded-md shadow-md w-full max-w-md p-8">
+        <h2 class="text-2xl font-semibold text-center">Edit Task</h2>
+        <% if (message.error) { %>
+            <div class="message-box message-box-danger p-5 text-white mb-3 shadow-md">
+                <%= message.error %>
+                <button type="button" class="close" aria-label="Close" onclick="closeMessageBox()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        <% } %>
 
-    <% if (message.error) { %>
-        <div class="message-box message-box-danger p-5 text-white mb-3 shadow-md">
-            <%= message.error %>
-            <button type="button" class="close" aria-label="Close" onclick="closeMessageBox()">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    <% } %>
+        <form action="/edit/<%= task._id %>" method="post" id="edit-task-form">
+            <div class="mb-4">
+                <label for="title" class="text-gray-700 text-sm font-medium">Task Title:</label>
+                <input type="text" name="title" id="title" value="<%= task.title %>"
+                       class="form-input w-full px-3 py-2 rounded-md shadow-md border border-gray-300" required>
+            </div>
 
-    <div class="inner-edit-task-container">
-        <div class="edit-task-form">
-            <h2 class="text-white mb-5 text-center">Edit Task</h2>
-            <form action="/edit/<%= task._id %>" method="post" id="edit-task-form">
-                <div class="label-container">
-                    <label for="title" class="mr-2">Task Title:</label>
-                    <input type="text" name="title" id="title" value="<%= task.title %>" required>
-                </div>
+            <div class="mb-4">
+                <label for="description" class="text-gray-700 text-sm font-medium">Description or Details:</label>
+                <textarea name="description" id="description"
+                          class="form-textarea w-full px-3 py-2 rounded-md shadow-md border border-gray-300"
+                          required><%= task.description %></textarea>
+            </div>
 
-                <div class="label-container">
-                    <label for="description" class="mr-2">Description or Details:</label>
-                    <textarea name="description" id="description"><%= task.description %></textarea>
-                </div>
+            <div class="mb-4">
+                <label for="state" class="text-gray-700 text-sm font-medium">Task State:</label>
+                <select name="state" id="state" required
+                        class="form-select w-full px-3 py-2 rounded-md shadow-md border border-gray-300">
+                    <option value="Pending" <%= task.state === 'Pending' ? 'selected' : '' %>>Pending</option>
+                    <option value="Completed" <%= task.state === 'Completed' ? 'selected' : '' %>>Completed</option>
+                </select>
+            </div>
 
-                <div class="label-container state-label-container">
-                    <label for="state" class="mr-2">Task State:</label>
-                    <select name="state" id="state" required>
-                        <option value="Pending" <%= task.state === 'Pending' ? 'selected' : '' %>>Pending</option>
-                        <option value="Completed" <%= task.state === 'Completed' ? 'selected' : '' %>>Completed</option>
-                    </select>
-                </div>
-                                
-                <div class="task-button-container">
-                    <a href="/tasks" class="task-button">Cancel</a>
-                    <button type="submit" class="task-button">Edit Task</button>
-                </div>
-            </form>
-        </div>
+            <div class="flex justify-between">
+                <a href="/tasks" class="task-button bg-gray-500 text-white rounded-md py-2 px-4 hover:bg-gray-600">Cancel</a>
+                <button type="submit" class="task-button bg-blue-500 text-white rounded-md py-2 px-4 hover:bg-blue-600">Edit Task</button>
+            </div>
+        </form>
     </div>
+</body>
+</html>
 
-</div>

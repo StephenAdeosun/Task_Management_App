@@ -53,6 +53,7 @@ router.post("/signup", async (req, res) => {
 
 
 router.post("/login", async (req, res) => {
+  try{
   const response = await userServices.Login({
     email: req.body.email,
     password: req.body.password,
@@ -63,8 +64,15 @@ router.post("/login", async (req, res) => {
     res.cookie("jwt", response.data.token, {maxAge: 1000 * 60 * 60 * 24});
     res.redirect("task");
   } else {
-    res.render("login");
+    const message = response.message;
+    res.render("login", { message, user: req.user })
   }
+} catch (error) {
+  res.status(500).json({
+    success: false,
+    message: error.message,
+  });
+}
 });
 
 
@@ -78,18 +86,19 @@ router.use(async (req, res, next) => {
             res.locals.user = decodedValue
             next()
         } catch (error) {
-            res.redirect('/login')
+            res.redirect('/views/login')
         }
     } else {
-        res.redirect('/login')
+        res.redirect('/views/login')
     }
 })
 
 router.get('/logout', (req, res) => {
     // res.cookie('jwt', '', { maxAge: 1 });
     res.clearCookie('jwt');
-    res.render('index');
+    res.render('/');
 })
+
 
 router.get('/task', async (req, res) => {
   const user_id = res.locals.user.id;
@@ -132,8 +141,95 @@ router.post('/task/create', async (req, res) => {
 
 
 
+// Add an edit route for a specific task
+router.get('/views/task/edit/<%= task._id %>', async (req, res) => {
+  try {
+    const taskId = req.params.taskId;
+
+    // Fetch the task from the database by its _id (taskId)
+    const task = await TaskModel.findById(taskId);
+
+    if (!task) {
+      // Handle the case where the task with the given _id doesn't exist
+      return res.status(404).send('Task not found');
+    }
+
+    // Render the edit form with the task data
+    res.render('taskedit', { task });
+  } catch (error) {
+    // Handle any errors that occur during the retrieval of the task
+    console.error('Error fetching task for editing:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+router.post('/views/task/edit/<%= task._id %>', async (req, res) => {
+  try {
+    const taskId = req.params.taskId;
+    const updatedTaskData = {
+      title: req.body.title,
+      description: req.body.description,
+      state: req.body.state,
+    };
+
+    // Update the task with the new data
+    await TaskModel.findByIdAndUpdate(taskId, updatedTaskData);
+
+    // Redirect to the task list page after editing
+    res.redirect('/views/task');
+  } catch (error) {
+    // Handle errors that may occur during the update process
+    console.error('Error updating task:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
 
 
+router.get('/edit/:id', async(req, res) => {
+  try {
+      const taskId = req.params.id;
+      const taskToEdit = await taskModel.findById(taskId);
 
+      if (!taskToEdit) {
+          return res.status(404).json({ error: 'Task not found!' });
+      }
+      
+      res.status(200).render('edit', {
+          title: 'Edit Task',
+          links: [{ link_name: 'Logout', url: '/logout' }],
+          task: taskToEdit,
+          message: {},
+          req: req,
+      })
+
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Failed to edit the task!' })
+  }
+});
+
+router.post('/edit/:id', async(req, res) => {
+  try {
+      const taskId = req.params.id;
+      const { title, description, state } = req.body;
+
+      const updatedTask = await taskModel.findByIdAndUpdate(
+          taskId,
+          { title, description, state },
+          { new: true }
+      );
+
+      if (!updatedTask) {
+          return res.status(404).json({ error: 'Task not found!' });
+      }
+
+      res.redirect('task')
+
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Failed to update the task!' });
+  }
+})
+// /
 
 module.exports = router;

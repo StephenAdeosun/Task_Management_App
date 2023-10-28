@@ -1,55 +1,57 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        body1 {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f5f5f5;
-        }
 
-        .login-container {
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin-top:40px;	
-            background-color: #fff;
-            width: 100%;
-            max-width: 600px; /* Set the maximum width here */
-        }
-    </style>
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.15/dist/tailwind.min.css">
 </head>
-<body>
-    <!-- <header>
-        <%- include('./partials/header.ejs'); %>
-    </header> -->
-    <div class="body1">
-    <div class="container login-container">
-        <h2>Login</h2>
-        <form action="/views/login" method="post">
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="text" class="form-control" id="email" name="email" value="">
+
+<body >
+    <nav class="bg-blue-500 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <!-- Logo -->
+            <div class="text-white text-2xl font-semibold">Logo</div>
+            
+            <!-- Navigation Links -->
+            <div class="space-x-4">
+                <a href="/views/" class="text-white hover:underline">Home</a>
             </div>
-            <div class="form-group">
-                <label for="password">Password:</label>
-                <input type="password" class="form-control" id="password" name="password" value="">
+            
+            <!-- Login and Sign Up Buttons -->
+            <div>
+                <!-- <a href="/views/login" class="text-white mr-4 hover:underline">Login</a> -->
+                <a href="/views/signup" class="bg-white text-blue-500 px-4 py-2 rounded-full hover:bg-blue-100">Sign Up</a>
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-        <div class="d-flex">
-        <p>Dont have an account?  </p> 
-        <a href="/views/signup">Sign up</a>
+        </div>
+    </nav>
+<div class="bg-gray-100 flex items-center justify-center h-screen">
+    <div class="container mx-auto">
+        <div class="login-container bg-white p-4 rounded-lg shadow-md max-w-md mx-auto">
+            <h2 class="text-2xl font-semibold text-center">Login</h2>
+
+            <form action="/views/login" method="post">
+                <div class="mb-4">
+                    <label for="email" class="block text-gray-700 text-sm font-medium mb-2">Email:</label>
+                    <input type="text" class="form-input w-full px-3 py-2 rounded-md shadow-sm border border-gray-300 placeholder-gray-400 focus:outline-none"
+                        id="email" name="email" placeholder="Enter your email" value="">
+                </div>
+                <div class="mb-4">
+                    <label for="password" class="block text-gray-700 text-sm font-medium mb-2">Password:</label>
+                    <input type="password" class="form-input w-full px-3 py-2 rounded-md shadow-sm border border-gray-300 placeholder-gray-400 focus:outline-none"
+                        id="password" name="password" placeholder="Enter your password" value="">
+                </div>
+                <button type="submit" class="bg-blue-500 text-white rounded p-2 w-full hover:bg-blue-600">Submit</button>
+            </form>
+
+            <div class="text-center my-4">
+                <p>Don't have an account? <a href="/views/signup" class="text-blue-500 hover:underline">Sign up</a></p>
+            </div>
         </div>
     </div>
     </div>
-    
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
 </html>
