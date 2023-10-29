@@ -1,6 +1,7 @@
 const express = require('express');
 const editRoute = express.Router();
 const taskModel = require('../model/TaskModel.js');
+const logger = require('../logger/logger.js');
 
 editRoute.get('/:id', async(req, res) => {
     try {
@@ -8,6 +9,7 @@ editRoute.get('/:id', async(req, res) => {
         const taskToEdit = await taskModel.findById(taskId);
 
         if (!taskToEdit) {
+            logger.error('Task not found')
             return res.status(404).json({ error: 'Task not found!' });
         }
         
@@ -20,12 +22,13 @@ editRoute.get('/:id', async(req, res) => {
         })
 
     } catch (error) {
-        console.error(error);
+        logger.error(error);    
         res.status(500).json({ error: 'Failed to edit the task!' })
     }
 });
 
 editRoute.get('/task', async(req, res) => {
+    logger.info('Task fetched successfully')
     res.render('task')
 });
 
@@ -41,13 +44,15 @@ editRoute.post('/:id', async(req, res) => {
         );
 
         if (!updatedTask) {
+            logger.error('Task not found')
             return res.status(404).json({ error: 'Task not found!' });
         }
 
+        logger.info('Task updated successfully')
         res.redirect('/tasks')
 
     } catch (error) {
-        console.error(error);
+        logger.error(error);
         res.status(500).json({ error: 'Failed to update the task!' });
     }
 })

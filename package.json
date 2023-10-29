@@ -24,7 +24,8 @@
     "mongoose": "^7.5.3",
     "parser": "^0.1.4",
     "shortid": "^2.2.16",
-    "supertest": "^6.3.3"
+    "supertest": "^6.3.3",
+    "winston": "^3.11.0"
   },
   "devDependencies": {
     "jest": "^29.7.0"

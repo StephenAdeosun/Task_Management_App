@@ -1,6 +1,5 @@
-const fs = require('fs')
 const joi = require('joi')
-
+const logger = require('../logger/logger')
 
 const ValidateUserCreation = async (req, res, next) => {
     try {
@@ -22,10 +21,12 @@ const ValidateUserCreation = async (req, res, next) => {
             gender: joi.string().valid('male', 'female'),
         })
 
+        logger.info(req.body)
         await schema.validateAsync(req.body, { abortEarly: true })
 
         next()
     } catch (error) {
+        logger.error(error)
         return res.status(422).json({
             message: error.message,
             success: false
@@ -40,9 +41,11 @@ const ValidateUserLogin = async (req, res, next) => {
             email: joi.string().email().required(),
         })
 
+        logger.info(req.body)
         await schema.validateAsync(req.body, { abortEarly: true })
         next()
     } catch (error) {
+        logger.error(error)
         return res.status(422).json({
             message: error.message,
             success: false

@@ -1,8 +1,7 @@
-const fs = require('fs')
 const UserSchema = require('../model/UserModel')
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
-
+const logger = require('../logger/logger')
 
 const CreateUser = async (req, res) => {
     try {
@@ -10,6 +9,7 @@ const CreateUser = async (req, res) => {
 
         const existingUser = await UserSchema.findOne({ email: userFromReq.email })
         if (existingUser) {
+            logger.error('User already exists')
             return res.status(409).json({
                 success: false,
                 message: 'User already exists',
@@ -27,9 +27,11 @@ const CreateUser = async (req, res) => {
             gender: userFromReq.gender
         })
 
+        logger.info(user)
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' })
 
         if (user) {
+            logger.info('User created successfully')
             return res.status(201).json({
                 success: true,
                 message: 'User created successfully',
@@ -39,6 +41,7 @@ const CreateUser = async (req, res) => {
 
     }
     catch (error) {
+        logger.error(error)
         res.status(500).json({
             success: false,
             message: error.message,
@@ -52,6 +55,7 @@ const LoginUser = async (req, res) => {
     const userFromReq = req.body
     const user = await UserSchema.findOne({ email: userFromReq.email })
     if (!user){
+        logger.error('User not found')
         return res.status(404).json({
             success: false,
             message: 'User not found'
@@ -59,6 +63,7 @@ const LoginUser = async (req, res) => {
     }
     const validPassword = await user.validatePassword(userFromReq.password)
     if (!validPassword){
+        logger.error('Invalid password')
         return res.status(400).json({
             success: false,
             message: 'Invalid password'
@@ -66,6 +71,7 @@ const LoginUser = async (req, res) => {
     }
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' })
+    logger.info('User logged in successfully')
     return res.status(200).json({
         success: true,
         message: 'User logged in successfully',
@@ -73,38 +79,13 @@ const LoginUser = async (req, res) => {
     })
 }
 catch (error) {
+    logger.error(error)
     res.status(500).json({
         success: false,
         message: error.message,
     })
 }
 }
-
-
-// const createUser = (req, res) => {
-//     const userData = fs.readFileSync('./users/users.json')
-//     const userDataJson = JSON.parse(userData)
-//     const user = req.body
-
-//     user.api_key = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
-//     if (user.username === 'stephen') {
-//         user.role = 'admin'
-//     }
-//     else {
-//         user.role = 'user'
-//     }
-
-//     userDataJson.push(user)
-
-//     fs.writeFileSync('./users/users.json', JSON.stringify(userDataJson, null, 4), (err) => {
-//         if (err) {
-//             res.status(500).send(err)
-//         }
-//     })
-//     res.status(201).send(`User added with name: ${user.username}`)
-// }
-
-
 
 
 module.exports = {

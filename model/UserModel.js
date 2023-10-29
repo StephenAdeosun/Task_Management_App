@@ -11,14 +11,7 @@ const UserModel = new Schema({
     created_at: { type: Date, default: new Date() },
     name: { type: String, required: true },
     email: { type: String, unique: true, required: true },
-    // contact: { type: String },
     password: { type: String, required: true },
-    // phone_number: { type: String },
-    // user_type: { type: String, default: 'user' }, 
-    // gender:  { 
-    //   type: String, 
-    //   enum: ['male', 'female'], 
-    // }
 });
 
 UserModel.pre('save', async function(next) {

@@ -5,45 +5,48 @@ const cookieParser = require("cookie-parser");
 const TaskModel = require("../model/TaskModel.js");
 const taskService = require("../task/task_controller");
 const taskRouter = require("../task/task_router");
-// const auth = require('../auth/auth_login')
 const jwt = require("jsonwebtoken");
 const app = require("../api.js");
 require("dotenv").config();
 const router = express.Router();
-
+const logger = require("../logger/logger.js");
 router.use(cookieParser());
 router.use('/tasks', taskRouter)
 
 
 
 router.get("/", (req, res) => {
+  logger.info("Home page rendered");
   res.render("home");
 });
-router.get("/signup", (req, res) => {
-  const message = "";
-  res.render("signup",  { user: req.user, message })  ;
-});
+router.get("/signup/", (req, res) => {
+  logger.info("Signup page rendered");
+  res.render("signup",  { user: req.user }); })  ;
 
-router.get("/login", (req, res) => { 
+router.get("/login/", (req, res) => {
+  logger.info("Login page rendered"); 
   res.render("login");
  });
 
-router.post("/signup", async (req, res) => {
+router.post("/signup/", async (req, res) => {
   try {
     const response = await userServices.Signup({
         name: req.body.name,
         email: req.body.email,
         password: req.body.password,
     });
-    console.log(response);
+   logger.info(response);
 
     if (response.success) {
+        logger.info("User created successfully");
         res.redirect("login");
     } else {
+      logger.error("User not created");
       const message = response.message;
         res.render("signup", { message, user: req.user })   
     }
 } catch (error) {
+  logger.error(error);
   res.status(500).json({
     success: false,
     message: error.message,
@@ -52,22 +55,25 @@ router.post("/signup", async (req, res) => {
 });
 
 
-router.post("/login", async (req, res) => {
+router.post("/login/", async (req, res) => {
   try{
   const response = await userServices.Login({
     email: req.body.email,
     password: req.body.password,
   }); 
-  console.log(response);
+  logger.info(response);  
 
   if (response.success ) {
+    logger.info("User logged in successfully"); 
     res.cookie("jwt", response.data.token, {maxAge: 1000 * 60 * 60 * 24});
-    res.redirect("task");
+    res.redirect("/tasks");
   } else {
+    logger.error("User not logged in");
     const message = response.message;
     res.render("login", { message, user: req.user })
   }
 } catch (error) {
+  logger.error(error);
   res.status(500).json({
     success: false,
     message: error.message,
@@ -80,6 +86,7 @@ router.use(async (req, res, next) => {
       const token = req.cookies.jwt;
 
     if (token) {
+      logger.info("You are authenticated!");
         try {
             const decodedValue = await jwt.verify(token, process.env.JWT_SECRET);
 
@@ -93,10 +100,10 @@ router.use(async (req, res, next) => {
     }
 })
 
-router.get('/logout', (req, res) => {
-    // res.cookie('jwt', '', { maxAge: 1 });
+router.get('/logout/', (req, res) => {
+   logger.info("You are logged out!");  
     res.clearCookie('jwt');
-    res.render('/');
+    res.redirect('/');
 })
 
 
@@ -104,7 +111,7 @@ router.get('/task', async (req, res) => {
   const user_id = res.locals.user.id;
 
   const response = await taskService.getTasks(user_id);
-
+  logger.info(response);
   res.render('task', { 
     user: res.locals.user, 
     tasks: response.data.tasks
@@ -116,7 +123,7 @@ router.get('/task', async (req, res) => {
 
 
 
-router.get('/task/completed', async (req, res) => {
+router.get('/task/completed/', async (req, res) => {
   const user_id = res.locals.user.id;
 
   const response = await taskService.getCompletedTasks(user_id);
@@ -129,7 +136,7 @@ router.get('/task/completed', async (req, res) => {
   console.log({ user: req.user });
   console.log(response);
 })
-router.get('/task/pending', async (req, res) => {
+router.get('/task/pending/', async (req, res) => {
   const user_id = res.locals.user.id;
 
   const response = await taskService.getPendingTasks(user_id);
@@ -143,11 +150,11 @@ router.get('/task/pending', async (req, res) => {
   console.log(response);
 })
  
-router.get('/task/create', (req, res) => {
+router.get('/task/create/', (req, res) => {
   res.render('taskcreate')
 } )
 
-router.post('/task/create', async (req, res) => {
+router.post('/task/create/', async (req, res) => {
   console.log({ body : req.body })
   req.body.user_id = res.locals.user.id;
   console.log({ body : req.body.user_id })
@@ -155,106 +162,17 @@ router.post('/task/create', async (req, res) => {
 
 
   if (response.code === 200) {
-      res.redirect('/views/task')
+      res.redirect('/task')
   } else {
       res.render('taskcreate', { error: response.message })
   }
 })
 
 
-// Inside your Express router
 
 
 
-// Add an edit route for a specific task
-router.get('/views/task/edit/<%= task._id %>', async (req, res) => {
-  try {
-    const taskId = req.params.taskId;
-
-    // Fetch the task from the database by its _id (taskId)
-    const task = await TaskModel.findById(taskId);
-
-    if (!task) {
-      // Handle the case where the task with the given _id doesn't exist
-      return res.status(404).send('Task not found');
-    }
-
-    // Render the edit form with the task data
-    res.render('taskedit', { task });
-  } catch (error) {
-    // Handle any errors that occur during the retrieval of the task
-    console.error('Error fetching task for editing:', error);
-    res.status(500).send('Internal Server Error');
-  }
-});
-
-router.post('/views/task/edit/<%= task._id %>', async (req, res) => {
-  try {
-    const taskId = req.params.taskId;
-    const updatedTaskData = {
-      title: req.body.title,
-      description: req.body.description,
-      state: req.body.state,
-    };
-
-    // Update the task with the new data
-    await TaskModel.findByIdAndUpdate(taskId, updatedTaskData);
-
-    // Redirect to the task list page after editing
-    res.redirect('/views/task');
-  } catch (error) {
-    // Handle errors that may occur during the update process
-    console.error('Error updating task:', error);
-    res.status(500).send('Internal Server Error');
-  }
-});
 
 
-router.get('/edit/:id', async(req, res) => {
-  try {
-      const taskId = req.params.id;
-      const taskToEdit = await taskModel.findById(taskId);
-
-      if (!taskToEdit) {
-          return res.status(404).json({ error: 'Task not found!' });
-      }
-      
-      res.status(200).render('edit', {
-          title: 'Edit Task',
-          links: [{ link_name: 'Logout', url: '/logout' }],
-          task: taskToEdit,
-          message: {},
-          req: req,
-      })
-
-  } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Failed to edit the task!' })
-  }
-});
-
-router.post('/edit/:id', async(req, res) => {
-  try {
-      const taskId = req.params.id;
-      const { title, description, state } = req.body;
-
-      const updatedTask = await taskModel.findByIdAndUpdate(
-          taskId,
-          { title, description, state },
-          { new: true }
-      );
-
-      if (!updatedTask) {
-          return res.status(404).json({ error: 'Task not found!' });
-      }
-
-      res.redirect('task')
-
-  } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Failed to update the task!' });
-  }
-})
-// /
 
 module.exports = router;

@@ -5,7 +5,7 @@ const userModel = require('../model/UserModel');
 const taskService = require('../task/task_controller');
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
-
+const logger = require('../logger/logger.js');
 
 router.use(cookieParser());
 router.use(async (req, res, next) => {
@@ -16,9 +16,11 @@ router.use(async (req, res, next) => {
           const decodedValue = await jwt.verify(token, process.env.JWT_SECRET);
 
           res.locals.user = decodedValue
+          logger.info('You are authenticated!')
           next()
       } catch (error) {
-console.log(error)
+        logger.error('You are not authenticated!')
+          res.redirect('/login')
       }
   } else {
       res.redirect('/login')
@@ -36,8 +38,8 @@ router.get('/', async (req, res) => {
       tasks: response.data.tasks
     });
   
-    console.log({ user: req.user });
-    console.log(response);
+   logger.info({ user: res.locals.user });
+  logger.info(response);
   });
 
   router.get('/task/create', (req, res) => {

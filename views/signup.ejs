@@ -11,12 +11,12 @@
             
             <!-- Navigation Links -->
             <div class="space-x-4">
-                <a href="/views/" class="text-white hover:underline">Home</a>
+                <a href="/" class="text-white hover:underline">Home</a>
             </div>
             
             <!-- Login and Sign Up Buttons -->
             <div>
-                <a href="/views/login" class="text-white mr-4 hover:underline">Login</a>
+                <a href="/login/" class="text-white mr-4 hover:underline">Login</a>
                 <!-- <a href="/views/signup" class="bg-white text-blue-500 px-4 py-2 rounded-full hover:bg-blue-100">Sign Up</a> -->
             </div>
         </div>
@@ -25,10 +25,8 @@
     <div class="container mx-auto">
         <div class="login-container bg-white p-4 rounded-lg shadow-md max-w-md mx-auto">
             <h2 class="text-2xl font-semibold text-center">Sign Up</h2>
-            <% if (message) { %>
-                <p class="text-red-500 text-center my-2"><%= message %></p>
-            <% } %>
-            <form action="/views/signup" method="post">
+        
+            <form action="/signup" method="post">
                 <div class="mb-4">
                     <label for="name" class="block text-gray-700 text-sm font-medium mb-2">Name:</label>
                     <input type="text" class="form-input w-full px-3 py-2 rounded-md shadow-sm border border-gray-300 placeholder-gray-400 focus:outline-none" id="name" name="name" placeholder="Enter your name" value="">
@@ -44,7 +42,7 @@
                 <button type="submit" class="bg-blue-500 text-white rounded p-2 w-full hover:bg-blue-600">Submit</button>
             </form>
             <div class="text-center my-4">
-                <p>Don't have an account? <a href="/views/login" class="text-blue-500 hover:underline">Log In</a></p>
+                <p>Don't have an account? <a href="/login/" class="text-blue-500 hover:underline">Log In</a></p>
             </div>
         </div>
     </div>
